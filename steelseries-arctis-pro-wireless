@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Adpated from https://gist.github.com/ef4/2075048
+
+OUTPUT="alsa_output.hw_CARD_Wireless_DEV_1"
+INPUT="alsa_input.usb-SteelSeries_Arctis_Pro_Wireless-00.analog-mono"
+
+if [ "$1" == "--fork" ]; then
+    # When run from udev, we fork to give pulseaudio a chance to
+    # detect the new device
+    bash $0 &
+elif [ "$UID" == "0" ]; then
+    # If we're running as root, we just forked from udev. Now sleep so
+    # pulseaudio can run.
+    sleep 1
+ 
+    # Check process table for users running PulseAudio
+    for user in `ps axc -o user,command | grep pulseaudio | cut -f1 -d' ' | sort | uniq`;
+    do
+	# And relaunch ourselves for each of those users.
+	su $user -c "bash $0"
+    done
+else
+    # Set PULSE_RUNTIME_DIR for pacmd
+    export PULSE_RUNTIME_PATH=/run/user/$(id -u $user)/pulse/
+
+    # Device needs to be manually loaded
+    pacmd load-module module-alsa-sink device=hw:CARD=Wireless,DEV=1
+
+    # Running as non-root, so adjust our PulseAudio directly.
+    pacmd set-default-sink $OUTPUT >/dev/null 2>&1
+    pacmd set-default-source $INPUT >/dev/null 2>&1
+
+    for playing in $(pacmd list-sink-inputs | awk '$1 == "index:" {print $2}')
+    do
+	pacmd move-sink-input $playing $OUTPUT >/dev/null 2>&1
+    done
+
+    for recording in $(pacmd list-source-outputs | awk '$1 == "index:" {print $2}')
+    do
+	pacmd move-source-output $recording $INPUT >/dev/null 2>&1
+    done
+fi

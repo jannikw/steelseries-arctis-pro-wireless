@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="1290", RUN+="/usr/local/bin/steelseries-arctis-pro-wireless --fork"
