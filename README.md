@@ -8,3 +8,4 @@ Utilizes a systemd service to setup the headset when it is plugged in.
 ## Installation
 
 Manually install the service and copy the `steelseries-arctis-pro-wireless` script to `/usr/local/bin` or install as an Arch package using `makepkg -i`.
+Then enable the systemd service via `sudo systemctl enable steelseries-arctis-pro-wireless.service`.
