@@ -6,4 +6,4 @@ WantedBy=dev-snd-by\x2did-usb\x2dSteelSeries_Arctis_Pro_Wireless\x2d00.device
 
 [Service]
 Type=forking
-ExecStart=/usr/local/bin/steelseries-arctis-pro-wireless
+ExecStart=/usr/local/bin/steelseries-arctis-pro-wireless --alsa-max-volume

@@ -33,8 +33,11 @@ else
     for recording in $(pacmd list-source-outputs | awk '$1 == "index:" {print $2}')
     do
 	    pacmd move-source-output $recording $INPUT >/dev/null 2>&1
-    done
+    done    
+fi
 
+# Set the volume of the ALSA sound card to maximum
+if [[ "$@" == *"--alsa-max-volume"* ]]; then
     # Escaped pattern of card to look for in aplay's output
     CARD_PATTERN="Wireless \[Arctis Pro Wireless\]"
     # Control patterns to look for in amixer's output for mono and stereo (chat and game)

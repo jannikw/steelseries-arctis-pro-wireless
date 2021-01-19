@@ -1,7 +1,7 @@
 # Maintainer: jannikw
 
 pkgname=pulseaudio-arctis-pro-wireless
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="Set SteelSeries Arctis Pro Wireless Stereo as the default output when connected"
 arch=("any")
@@ -10,8 +10,8 @@ license=('GPL')
 depends=("pulseaudio")
 source=("steelseries-arctis-pro-wireless.service"
        	"steelseries-arctis-pro-wireless")
-md5sums=('6d55e535a3e7eed574e36de6da9c0ca6'
-         '7a5072a6af43b8be5495b6452c291d23')
+md5sums=('46610661b78e23811171f8a0e3c6745f'
+         '42303128906cb94066534ef0efb42757')
 
 package() {
 	install -Dm644 steelseries-arctis-pro-wireless.service "$pkgdir"/usr/lib/systemd/system/steelseries-arctis-pro-wireless.service
