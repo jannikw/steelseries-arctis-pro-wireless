@@ -11,7 +11,7 @@ depends=("pulseaudio")
 source=("steelseries-arctis-pro-wireless.service"
        	"steelseries-arctis-pro-wireless")
 md5sums=('46610661b78e23811171f8a0e3c6745f'
-         '42303128906cb94066534ef0efb42757')
+         'b0567f2aa01744531c27a9f4497fefb3')
 
 package() {
 	install -Dm644 steelseries-arctis-pro-wireless.service "$pkgdir"/usr/lib/systemd/system/steelseries-arctis-pro-wireless.service

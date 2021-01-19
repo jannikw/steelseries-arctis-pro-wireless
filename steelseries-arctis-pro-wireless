@@ -8,17 +8,17 @@ INPUT="alsa_input.usb-SteelSeries_Arctis_Pro_Wireless-00.analog-mono"
 if [ "$1" == "--fork" ]; then
     # When run from udev, we fork to give pulseaudio a chance to
     # detect the new device
-    bash $0 &
+    bash "$0" &
 elif [ "$UID" == "0" ]; then
     # If we're running as root, we just forked from udev. Now sleep so
     # pulseaudio can run.
     sleep 1
  
     # Check process table for users running PulseAudio
-    for user in `ps axc -o user,command | grep pulseaudio | cut -f1 -d' ' | sort | uniq`;
+    for user in $(ps axc -o user,command | grep pulseaudio | cut -f1 -d' ' | sort | uniq);
     do
 	    # And relaunch ourselves for each of those users.
-	    su $user -c "bash $0" &
+	    su "$user" -c "bash $0" &
     done
 else
     # Running as non-root, so adjust our PulseAudio directly.
@@ -27,17 +27,17 @@ else
 
     for playing in $(pacmd list-sink-inputs | awk '$1 == "index:" {print $2}')
     do
-	    pacmd move-sink-input $playing $OUTPUT >/dev/null 2>&1
+	    pacmd move-sink-input "$playing" $OUTPUT >/dev/null 2>&1
     done
 
     for recording in $(pacmd list-source-outputs | awk '$1 == "index:" {print $2}')
     do
-	    pacmd move-source-output $recording $INPUT >/dev/null 2>&1
+	    pacmd move-source-output "$recording" $INPUT >/dev/null 2>&1
     done    
 fi
 
 # Set the volume of the ALSA sound card to maximum
-if [[ "$@" == *"--alsa-max-volume"* ]]; then
+if [[ "$*" == *"--alsa-max-volume"* ]]; then
     # Escaped pattern of card to look for in aplay's output
     CARD_PATTERN="Wireless \[Arctis Pro Wireless\]"
     # Control patterns to look for in amixer's output for mono and stereo (chat and game)
@@ -50,11 +50,6 @@ if [[ "$@" == *"--alsa-max-volume"* ]]; then
         exit 1
     fi
     echo "Found device with sound card number $CARD_NUM"
-
-    for CONTROL_PATTERN in "${CONTROL_PATTERNS[@]}"
-    do
-        echo $CONTROL_PATTERN
-    done
 
     for CONTROL_PATTERN in "${CONTROL_PATTERNS[@]}"
     do
